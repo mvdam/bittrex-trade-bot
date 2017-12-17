@@ -1,0 +1,25 @@
+{
+  "name": "bittrex-trade-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./src/index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mvdam/bittrex-trade-bot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mvdam/bittrex-trade-bot/issues"
+  },
+  "homepage": "https://github.com/mvdam/bittrex-trade-bot#readme",
+  "dependencies": {
+    "crypto-js": "3.1.9-1",
+    "node-fetch": "1.7.3"
+  }
+}
