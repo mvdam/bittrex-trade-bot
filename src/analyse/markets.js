@@ -1,7 +1,11 @@
+// dependencies
 const { request } = require('../rest/request')
 const { calculateMovingAverage } = require('../studies/movingAverage')
+const { logger } = require('../utils/logger')
+const { trader } = require('../orders/trader')
 
-const MAX_SIMULAR_TRADES = 1
+// config
+const MAX_SIMULTANEOUS_TRADES = 1
 const MARKET_CIRTERIA = {
     STABLE: {
         min: -4,
@@ -15,37 +19,16 @@ const MARKET_CIRTERIA = {
     }
 }
 
-const marketState = {
-    markets: {}
-}
+// state
+let MARKETS_STATE = {}
 
-/* 
+async function analyseMarkets(config) {
+    const marketState = await setMarketStatus()
+    const traderState = await trader(marketState, config)
 
-{
-    markets: {
-        ethereum: {
-            market: { ... },
-            priceHistory: [ 1.1, 1.02, 1.4, 1.1 ], // newest first
-            movingAverage: 1.1
-        }
-    }
-}
+    MARKETS_STATE = Object.assign({}, traderState)
 
-
-*/
-
-
-// get daytrade markets
-// check price every 10 seconds
-// store current price
-// calculate moving average when there are more than x prices stored
-// check if current price > moving average
-
-
-
-
-async function analyseMarkets() {
-    return await setMarketStatus()
+    return MARKETS_STATE
 }
 
 async function setMarketStatus() {
@@ -54,32 +37,34 @@ async function setMarketStatus() {
     dayTradeMarkets.forEach(market => {
         const priceBtc = parseFloat(market.price_btc)
 
-        if (!marketState.markets[market.id]) {
-            marketState.markets[market.id] = {
+        if (!MARKETS_STATE[market.id]) {
+            MARKETS_STATE[market.id] = {
                 market,
                 priceHistory: [ priceBtc ],
-                movingAverage: 0
+                movingAverage: 0,
+                trade: {
+                    placed: false,
+                    type: null
+                }
             }
         } else {
-            marketState.markets[market.id].priceHistory = [ priceBtc, ...marketState.markets[market.id].priceHistory]
-            marketState.markets[market.id].movingAverage = calculateMovingAverage(marketState.markets[market.id].priceHistory)
-        }
-
-        if (market.id === 'ethereum') {
-            console.log('moving avg ETH:', marketState.markets['ethereum'].movingAverage)
+            MARKETS_STATE[market.id].priceHistory = [ priceBtc, ...MARKETS_STATE[market.id].priceHistory]
+            MARKETS_STATE[market.id].movingAverage = calculateMovingAverage(MARKETS_STATE[market.id].priceHistory)
         }
     })
 
-    return `Stored price info of ${dayTradeMarkets.length} markets!`
+    // logger(`MARKET_STATUS : Stored price info of ${dayTradeMarkets.length} markets!`)
+
+    return MARKETS_STATE
 }
 
 async function getDayTradeMarkets() {
     const topMarkets = await getTopMarkets()
-    return topMarkets.filter(m => filterMarketChange(m, MARKET_CIRTERIA.DAY_TRADE))
+    return topMarkets //.filter(m => filterMarketChange(m, MARKET_CIRTERIA.DAY_TRADE))
 }
 
 function getTopMarkets() {
-    return request('https://api.coinmarketcap.com/v1/ticker/?limit=50')
+    return request(`https://api.coinmarketcap.com/v1/ticker/?limit=50&${Date.now()}`)
 }
 
 function filterMarketChange(market, criteria) {

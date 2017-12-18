@@ -1,11 +1,12 @@
-const MIN_PRICE_HISTORY = 1
+const MIN_PRICE_HISTORY = 5
+const PERIOD_SIZE = 30
 
 function calculateMovingAverage(pricesHistory) {
     if (pricesHistory.length < MIN_PRICE_HISTORY) {
         return 0
     }
 
-    const useHistory = pricesHistory.slice(0, MIN_PRICE_HISTORY)
+    const useHistory = pricesHistory.slice(0, PERIOD_SIZE)
     const total = sumArray(useHistory)
 
     return total / useHistory.length

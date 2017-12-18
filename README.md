@@ -5,7 +5,7 @@
 
 ### How it works
 * Fetches top 50 of [CoinMarketCap](https://coinmarketcap.com/api/)
-* Grabs markets with that changed +2% - +10% in the last 24h
+* Grabs markets that changed between `+2%` and `+10%` in the last 24h
 * Saves prices history of selected markets
 * Calculates Moving Average of selected markets
 * ...

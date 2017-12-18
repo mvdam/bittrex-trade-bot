@@ -60,3 +60,4 @@ typings/
 
 # custom
 dev-notes.txt
+public/marketState.json
