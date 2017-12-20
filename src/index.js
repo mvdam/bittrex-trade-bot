@@ -10,7 +10,7 @@ const API_SECRET = process.env.API_SECRET
 const AUTO_BUY = false
 const AUTO_SELL = false
 
-const ANALYSIS_INTERVAL = 30000
+const ANALYSIS_INTERVAL = 10000
 
 // check process
 if (!API_KEY) {
@@ -33,21 +33,24 @@ async function runBot() {
         autoSell: AUTO_SELL
     })
 
-    const fs = require('fs');
-    
-    let student = {  
-        name: 'Mike',
-        age: 23, 
-        gender: 'Male',
-        department: 'English',
-        car: 'Honda' 
-    };
-    
     // save status to file
-    let data = JSON.stringify(marketState)
-    fs.writeFile('public/marketState.json', data, 'utf8', () => {})
-    
-    // logger(JSON.stringify(traderState))
+    const fs = require('fs');
+
+
+    const data = JSON.stringify(marketState)
+    const htmlFile = `
+        <html>
+            <head>
+                <script>const dataJson = '${data}';</script>
+                <script src="browser.js" type="text/javascript"></script>
+            </head>
+            <body>
+                Hello world
+            </body>
+        </html>
+    `
+
+    fs.writeFile('public/marketState.html', htmlFile, 'utf8', () => {})
 
     setTimeout(() => {
         runBot()

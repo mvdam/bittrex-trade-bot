@@ -4,8 +4,13 @@
 `API_KEY=<your-api-key> API_SECRET=<your-api-secret> npm start`
 
 ### How it works
-* Fetches top 50 of [CoinMarketCap](https://coinmarketcap.com/api/)
-* Grabs markets that changed between `+2%` and `+10%` in the last 24h
-* Saves prices history of selected markets
+* Fetches all BTC markets and price history of last ???hour??? from [Bittrex](https://bittrex.com/api/v1.1/public/getmarketsummaries)
+* Fetches price history of the BTC markets from [Bittrex](https://bittrex.com/api/v1.1/public/getmarkethistory?market=BTC-DOGE)
 * Calculates Moving Average of selected markets
+* ...
+
+### Future work
+* Register trade history to validate the algorithm
+* Implement multiple algorithms see https://github.com/oransel/node-talib
+* Use TypeScript
 * ...

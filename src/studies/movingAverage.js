@@ -1,5 +1,5 @@
-const MIN_PRICE_HISTORY = 5
-const PERIOD_SIZE = 30
+const MIN_PRICE_HISTORY = 15
+const PERIOD_SIZE = 15
 
 function calculateMovingAverage(pricesHistory) {
     if (pricesHistory.length < MIN_PRICE_HISTORY) {
