@@ -4,6 +4,15 @@ import { calculateMovingAverage } from '../studies/movingAverage'
 import { logger } from '../utils/logger'
 import { trader } from '../orders/trader'
 
+// interfaces
+import { IMarketStatus } from '../interfaces/IMarketStatus'
+import { IMarket } from '../interfaces/IMarket'
+import { IMarketHistory } from '../interfaces/IMarketHistory'
+import { ITraderBotConfig } from '../interfaces/ITraderBotConfig'
+
+type IMarketPriceHistory = {[key: string]: number[]} | {}
+type IMarketState = {[key: string]: IMarketStatus} | {}
+
 // config
 const MAX_SIMULTANEOUS_TRADES = 1
 const MARKET_CIRTERIA = {
@@ -20,10 +29,10 @@ const MARKET_CIRTERIA = {
 }
 
 // state
-let MARKETS_STATE = {}
-let MARKET_HISTORY = {}
+let MARKETS_STATE: IMarketState = {} as IMarketState
+let MARKET_HISTORY: IMarketPriceHistory = {} as IMarketPriceHistory
 
-export async function analyseMarkets(config) {
+export async function analyseMarkets(config: ITraderBotConfig) {
   const marketState = await setMarketStatus()
   const traderState = await trader(marketState, config)
 
@@ -32,8 +41,8 @@ export async function analyseMarkets(config) {
   return MARKETS_STATE
 }
 
-async function setMarketStatus() {
-  const dayTradeMarkets = await getDayTradeMarkets()
+async function setMarketStatus(): Promise<IMarketState> {
+  const dayTradeMarkets = await getDayTradeMarkets() as IMarket[]
 
   if (!Object.keys(MARKET_HISTORY).length) {
     MARKET_HISTORY = await getMarketsHistory(dayTradeMarkets.map(m => m.MarketName))
@@ -41,7 +50,7 @@ async function setMarketStatus() {
   }
 
   dayTradeMarkets.forEach(market => {
-    const priceBtc = parseFloat(market.Ask)
+    const priceBtc = market.Ask
     const marketId = market.MarketName
 
     if (!MARKETS_STATE[marketId]) {
@@ -67,12 +76,12 @@ async function setMarketStatus() {
   return MARKETS_STATE
 }
 
-async function getDayTradeMarkets() {
+async function getDayTradeMarkets(): Promise<IMarket[]> {
   const topMarkets = await getTopMarkets()
   return topMarkets.filter(m => m.MarketName.indexOf('BTC-') > -1)
 }
 
-async function getMarketsHistory(markets) {
+async function getMarketsHistory(markets: string[]): Promise<IMarketPriceHistory> {
   const fetchActions = []
   const output = {}
 
@@ -83,23 +92,19 @@ async function getMarketsHistory(markets) {
   const marketHistories = await Promise.all(fetchActions)
 
   markets.forEach((market, index) => {
-    const history = marketHistories[index].result
+    const history = marketHistories[index].result as IMarketHistory[]
 
     output[market] = history
-      ? history.filter(h => h.OrderType === 'BUY' && h.FillType === 'FILL').map(h => parseFloat(h.Price))
+      ? history
+          .filter(h => h.OrderType === 'BUY' && h.FillType === 'FILL')
+          .map(h => h.Price)
       : []
   })
 
   return output
 }
 
-async function getTopMarkets() {
+async function getTopMarkets(): Promise<IMarket[]> {
   const markets = await request(`https://bittrex.com/api/v1.1/public/getmarketsummaries`)
   return markets.result
-}
-
-function filterMarketChange(market, criteria) {
-  const changeAmount = criteria.period === 'week' ? parseFloat(market.percent_change_7d) : parseFloat(market.percent_change_24h)
-  return changeAmount >= criteria.min
-    && changeAmount <= criteria.max
 }
