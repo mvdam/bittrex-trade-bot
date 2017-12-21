@@ -1,0 +1,38 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "lib": ["es6"],
+        "jsx": "react",
+        "outDir": "dist",
+        "rootDir": "src",
+        "noImplicitAny": false,
+        "experimentalDecorators": true,
+        "preserveConstEnums": true,
+        "allowJs": true,
+        "sourceMap": false,
+        "noEmitOnError": true
+    },
+    "filesGlob": [
+        "src/**/*.ts",
+        "src/**/*.tsx"
+    ],
+    "exclude": [
+        "public",
+        "index.android.js",
+        "index.ios.js",
+        "dist",
+        "build",
+        "android",
+        "ios",
+        "__tests__",
+        "node_modules",
+        "scripts"
+    ],
+    "typeRoots": [
+        "node_modules/@types",
+        "./typings"
+    ],
+    "compileOnSave": false
+}

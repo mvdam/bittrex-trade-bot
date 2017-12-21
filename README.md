@@ -10,6 +10,8 @@
 * ...
 
 ### Future work
+* Add fees to diff calculations
+* Make frontend application and connect to websocket to get latest trades
 * Register trade history to validate the algorithm
 * Implement multiple algorithms see https://github.com/oransel/node-talib
 * Use TypeScript

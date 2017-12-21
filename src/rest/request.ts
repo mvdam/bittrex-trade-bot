@@ -1,7 +1,7 @@
-const fetch = require('node-fetch')
-const { createHeaders, getNonce } = require('./utils')
+import fetch from 'node-fetch'
+import { createHeaders, getNonce } from './utils'
 
-function signedRequest(action, apiKey, apiSecret) {
+export function signedRequest(action, apiKey, apiSecret) {
     const nonce = getNonce()
     const url = `${action}?apikey=${apiKey}&nonce=${nonce}`
     const headers = createHeaders(url, apiSecret)
@@ -11,12 +11,7 @@ function signedRequest(action, apiKey, apiSecret) {
         .then(json => json.result)
 }
 
-function request(url) {
+export function request(url) {
     return fetch(url)
         .then(res => res.json())
-}
-
-module.exports = {
-    signedRequest,
-    request
 }

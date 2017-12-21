@@ -1,6 +1,6 @@
-const CryptoJS = require('crypto-js')
+import CryptoJS from 'crypto-js'
 
-function createHeaders(uri, apiSecret) {
+export function createHeaders(uri, apiSecret) {
     const hash = CryptoJS.HmacSHA512(uri, apiSecret).toString()
 
     return {
@@ -10,11 +10,6 @@ function createHeaders(uri, apiSecret) {
     }
 }
 
-function getNonce() {
+export function getNonce() {
     return new Date().getTime()
-}
-
-module.exports = {
-    createHeaders,
-    getNonce
 }

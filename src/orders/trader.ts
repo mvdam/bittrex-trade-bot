@@ -1,8 +1,8 @@
 // dependencies
-const { logger } = require('../utils/logger')
-const { shouldBuy, shouldSell, shouldCancel, currentPrice, buy, sell, cancel } = require('./utils')
+import { logger } from '../utils/logger'
+import { shouldBuy, shouldSell, currentPrice, buy, sell } from './utils'
 
-function trader(marketStatusses, config) {
+export function trader(marketStatusses, config) {
   return new Promise((resolve, reject) => {
     const processedMarkets = {}
     const selectedMarketKeys = Object.keys(marketStatusses)
@@ -23,13 +23,7 @@ function processMarket(marketStatus, config) {
     return buy(marketStatus, currPrice)
   } else if (shouldSell(marketStatus)) {
     return sell(marketStatus, currPrice)
-  } else if (shouldCancel(marketStatus)) {
-    return cancel(marketStatus, currPrice)
   } else {
     return Object.assign({}, marketStatus)
   }
-}
-
-module.exports = {
-  trader
 }

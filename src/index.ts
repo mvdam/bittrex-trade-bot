@@ -1,8 +1,10 @@
 // dependencies
-const fs = require('fs')
-const { signedRequest } = require('./rest/request')
-const { analyseMarkets } = require('./analyse/markets')
-const { logger } = require('./utils/logger')
+import { writeFile } from 'fs'
+import { signedRequest } from './rest/request'
+import { analyseMarkets } from './analyse/markets'
+import { logger } from './utils/logger'
+
+declare const process: any
 
 // constants
 const API_KEY = process.env.API_KEY
@@ -34,9 +36,6 @@ async function runBot() {
     })
 
     // save status to file
-    const fs = require('fs');
-
-
     const data = JSON.stringify(marketState)
     const htmlFile = `
         <html>
@@ -50,7 +49,7 @@ async function runBot() {
         </html>
     `
 
-    fs.writeFile('public/marketState.html', htmlFile, 'utf8', () => {})
+    writeFile('public/marketState.html', htmlFile, 'utf8', () => {})
 
     setTimeout(() => {
         runBot()

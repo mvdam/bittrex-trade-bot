@@ -1,11 +1,13 @@
-const { logger } = require('../utils/logger')
+import { logger } from '../utils/logger'
 
 // config
 const MIN_PROFIT_PERCENTAGE = 0.01
 const TRANSACTION_COSTS_PERCENTAGE = 0.005
 const STOP_LOSS = 0.0001
 
-function shouldSell(marketStatus) {
+let TOTAL_PROFIT = []
+
+export function shouldSell(marketStatus) {
     if (invalidMarketStatus(marketStatus) || !marketStatus.trade.placed) {
         return false
     }
@@ -16,16 +18,14 @@ function shouldSell(marketStatus) {
     const normalSellCondition = (currPrice > targetSellPrice) // && (currPrice < prevPrice)
     const stopLoss = currPrice <= ( marketStatus.trade.price - STOP_LOSS )
 
-    if (normalSellCondition) {
-        console.log('___SELL___')
-    } else if (stopLoss) {
+    if (stopLoss) {
         console.log('___STOPLOSS___')
     }
 
     return normalSellCondition || stopLoss
 }
 
-function shouldBuy(marketStatus) {
+export function shouldBuy(marketStatus) {
     if (invalidMarketStatus(marketStatus) || marketStatus.trade.placed) {
         return false
     }
@@ -36,17 +36,7 @@ function shouldBuy(marketStatus) {
     return (currPrice < targetBuyPrice) && (currPrice > prevPrice)
 }
 
-function shouldCancel(marketStatus) {
-    if (invalidMarketStatus(marketStatus) || !marketStatus.trade.placed) {
-        return false
-    }
-
-    const { currPrice, movingAverage, tradeType } = extractMarketData(marketStatus)
-    return ( tradeType === 'sell' && currPrice < movingAverage )
-        || ( tradeType === 'buy' && currPrice > movingAverage )
-}
-
-function buy(marketStatus, currentPrice) {
+export function buy(marketStatus, currentPrice) {
   const priceDiff = ((currentPrice / marketStatus.movingAverage) * 100) - 100
   logger(`BUY : "${marketStatus.market.MarketName}" at ${currentPrice} BTC. Drops below moving avg with ${priceDiff}%. Avg is ${marketStatus.movingAverage}`)
 
@@ -60,22 +50,17 @@ function buy(marketStatus, currentPrice) {
   })
 }
 
-function sell(marketStatus, currentPrice) {
+export function sell(marketStatus, currentPrice) {
   const profit = ((currentPrice / marketStatus.trade.price) * 100) - 100
   logger(`SELL : "${marketStatus.market.MarketName}" at ${profit}% profit - old price ${marketStatus.trade.price} - current price ${currentPrice}`)
 
-  return Object.assign({}, marketStatus, {
-    trade: {
-      placed: true,
-      type: 'sell',
-      orderUuid: 'dsfsdf' // todo: implement
-    }
-  })
-}
+  if (!isNaN(profit)) {
+    TOTAL_PROFIT.push(profit)
+  }
 
-function cancel(marketStatus, currentPrice) {
-  const profit = ((currentPrice / marketStatus.trade.price) * 100) - 100
-  logger(`CANCEL : "${marketStatus.market.MarketName}", Diff is ${profit}%, currentPrice: ${currentPrice}, bought for: ${marketStatus.trade.price}`)
+  const logProfit = sumArray(TOTAL_PROFIT) / TOTAL_PROFIT.length
+
+  console.log(`___TOTAL_PROFIT ${logProfit}% ___`)
 
   return Object.assign({}, marketStatus, {
     trade: {
@@ -84,6 +69,10 @@ function cancel(marketStatus, currentPrice) {
       price: null
     }
   })
+}
+
+function sumArray(arr) {
+    return arr.reduce((a, b) => a + b, 0)
 }
 
 function extractMarketData(marketStatus) {
@@ -110,7 +99,7 @@ function previousPrice(priceHistory) {
     return priceHistory && priceHistory[1] || null
 }
 
-function currentPrice(priceHistory) {
+export function currentPrice(priceHistory) {
     return priceHistory && priceHistory[0] || null
 }
 
@@ -122,14 +111,4 @@ function sellTarget(movingAvg, minProfitPercentage, transactionPercentage) {
 function buyTarget(movingAvg, minProfitPercentage, transactionPercentage) {
     const profitPercentage = 1 - ( minProfitPercentage + transactionPercentage )
     return movingAvg * profitPercentage
-}
-
-module.exports = {
-    shouldSell,
-    shouldBuy,
-    shouldCancel,
-    buy,
-    sell,
-    cancel,
-    currentPrice
 }

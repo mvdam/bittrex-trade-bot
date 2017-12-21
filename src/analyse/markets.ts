@@ -1,8 +1,8 @@
 // dependencies
-const { request } = require('../rest/request')
-const { calculateMovingAverage } = require('../studies/movingAverage')
-const { logger } = require('../utils/logger')
-const { trader } = require('../orders/trader')
+import { request } from '../rest/request'
+import { calculateMovingAverage } from '../studies/movingAverage'
+import { logger } from '../utils/logger'
+import { trader } from '../orders/trader'
 
 // config
 const MAX_SIMULTANEOUS_TRADES = 1
@@ -23,7 +23,7 @@ const MARKET_CIRTERIA = {
 let MARKETS_STATE = {}
 let MARKET_HISTORY = {}
 
-async function analyseMarkets(config) {
+export async function analyseMarkets(config) {
   const marketState = await setMarketStatus()
   const traderState = await trader(marketState, config)
 
@@ -102,8 +102,4 @@ function filterMarketChange(market, criteria) {
   const changeAmount = criteria.period === 'week' ? parseFloat(market.percent_change_7d) : parseFloat(market.percent_change_24h)
   return changeAmount >= criteria.min
     && changeAmount <= criteria.max
-}
-
-module.exports = {
-  analyseMarkets
 }

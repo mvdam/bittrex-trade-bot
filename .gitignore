@@ -61,3 +61,6 @@ typings/
 # custom
 dev-notes.txt
 public/marketState.json
+dist
+.idea/
+.vscode
