@@ -21,9 +21,8 @@
 This version of the software has an average profit margin of `+1.2%`. We want to increase this in the near future to around `+5%`.
 
 ### Todo
-- [ ] Add Bittrex transaction fees to the profit calculation
-- [ ] Use RxJS
-- [ ] Add fees to profit calculations
+- [x] Add Bittrex transaction fees to the profit calculation
+- [x] Use RxJS
 - [ ] Make frontend pretty
 - [ ] Extend the `moving average` with [multiple algorithms](https://github.com/oransel/node-talib) to increase profit
 - [ ] Support for multiple markets (i.e. ETH-*)
