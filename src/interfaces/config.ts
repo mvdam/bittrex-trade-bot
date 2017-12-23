@@ -3,4 +3,8 @@ export interface ITraderBotConfig {
     apiSecret: string
     autoBuy: boolean
     autoSell: boolean
+    tradeInterval: number
+
+    buyFeeAmount: number
+    sellFeeAmount: number
 }
