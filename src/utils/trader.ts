@@ -1,4 +1,4 @@
-import { logger } from '../utils/logger'
+import { logger } from './logger'
 
 // config
 const MIN_PROFIT_PERCENTAGE = 0.01

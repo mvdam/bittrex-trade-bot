@@ -5,13 +5,10 @@ import { logger } from '../utils/logger'
 import { trader } from '../orders/trader'
 
 // interfaces
-import { IMarketStatus } from '../interfaces/IMarketStatus'
+import { IMarketStatus, IMarketState } from '../interfaces/IMarketStatus'
 import { IMarket } from '../interfaces/IMarket'
-import { IMarketHistory } from '../interfaces/IMarketHistory'
+import { IMarketHistory, IMarketPriceHistory } from '../interfaces/IMarketHistory'
 import { ITraderBotConfig } from '../interfaces/ITraderBotConfig'
-
-type IMarketPriceHistory = {[key: string]: number[]} | {}
-type IMarketState = {[key: string]: IMarketStatus} | {}
 
 // config
 const MAX_SIMULTANEOUS_TRADES = 1

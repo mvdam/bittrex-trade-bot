@@ -9,3 +9,5 @@ export interface IMarketStatus {
         type: 'buy' | null
     }
 }
+
+export type IMarketState = {[key: string]: IMarketStatus} | {}

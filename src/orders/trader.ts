@@ -1,8 +1,15 @@
 // dependencies
 import { logger } from '../utils/logger'
-import { shouldBuy, shouldSell, currentPrice, buy, sell } from './utils'
+import { shouldBuy, shouldSell, currentPrice, buy, sell } from '../utils/trader'
 
-export function trader(marketStatusses, config) {
+// interfaces
+import { IMarketState } from '../interfaces/IMarketStatus'
+
+// interaces
+import { IMarketStatus } from '../interfaces/IMarketStatus';
+import { ITraderBotConfig } from '../interfaces/ITraderBotConfig';
+
+export function trader(marketStatusses: IMarketStatus[], config: ITraderBotConfig): Promise<IMarketState> {
   return new Promise((resolve, reject) => {
     const processedMarkets = {}
     const selectedMarketKeys = Object.keys(marketStatusses)
@@ -15,7 +22,7 @@ export function trader(marketStatusses, config) {
   })
 }
 
-function processMarket(marketStatus, config) {
+function processMarket(marketStatus: IMarketStatus, config: ITraderBotConfig): IMarketStatus {
   const { apiKey, apiSecret, autoBuy, autoSell } = config
   const currPrice = currentPrice(marketStatus.priceHistory)
 

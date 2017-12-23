@@ -1,7 +1,7 @@
 const MIN_PRICE_HISTORY = 15
 const PERIOD_SIZE = 15
 
-export function calculateMovingAverage(pricesHistory) {
+export function calculateMovingAverage(pricesHistory: number[]): number {
     if (pricesHistory.length < MIN_PRICE_HISTORY) {
         return 0
     }
@@ -12,6 +12,6 @@ export function calculateMovingAverage(pricesHistory) {
     return total / useHistory.length
 }
 
-function sumArray(arr) {
+function sumArray(arr: number[]): number {
     return arr.reduce((a, b) => a + b, 0)
 }

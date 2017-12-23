@@ -7,3 +7,5 @@ export interface IMarketHistory {
     FillType: 'FILL' | 'PARTIAL_FILL'
     OrderType: 'BUY' | 'SELL'
 }
+
+export type IMarketPriceHistory = {[key: string]: number[]} | {}
