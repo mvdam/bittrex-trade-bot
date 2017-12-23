@@ -9,7 +9,7 @@ import { IMarketState } from '../interfaces/IMarketStatus'
 import { IMarketStatus } from '../interfaces/IMarketStatus';
 import { ITraderBotConfig } from '../interfaces/ITraderBotConfig';
 
-export function trader(marketStatusses: IMarketStatus[], config: ITraderBotConfig): Promise<IMarketState> {
+export function trader(marketStatusses: IMarketState, config: ITraderBotConfig): Promise<IMarketState> {
   return new Promise((resolve, reject) => {
     const processedMarkets = {}
     const selectedMarketKeys = Object.keys(marketStatusses)
