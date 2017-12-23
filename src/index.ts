@@ -1,18 +1,17 @@
-// libs
-import * as Rx from 'rxjs/Rx'
-import fetch from 'node-fetch'
-
 // functions
 import { movingAverageStrategy } from './strategies/movingAverage'
-import { getMarkets } from './rest/bittrex'
+import { tradeBot } from './trader/tradeBot';
 
-// utils
-import { applyStrategies } from './utils/strategies'
-import { combineMarketData } from './utils/markets'
+// constants
+const API_KEY = process.env.API_KEY
+const API_SECRET = process.env.API_SECRET
 
+const AUTO_BUY = false
+const AUTO_SELL = false
 const MIN_PROFIT_PERCENTAGE = 1
 const TRANSACTION_FEE_PERCENTAGE = 0.5
 const STOP_LOSS = 0.0001
+const ANALYSIS_INTERVAL = 10000
 
 const strategies = [
     // todo: add stoploss strategy
@@ -23,11 +22,11 @@ const strategies = [
     })
 ]
 
-const main = getMarkets()
-    // take 1 for debugging -> remove when implementation is finished
-    .take(1)
-    .mergeMap(combineMarketData)
-    .map(applyStrategies(strategies))
-    .subscribe((res) => {
-        console.log(res)
-    })
+const bot = tradeBot({
+    apiKey: API_KEY,
+    apiSecret: API_SECRET,
+    autoBuy: false,
+    autoSell: false,
+    tradeInterval: 10000,
+    strategies
+})

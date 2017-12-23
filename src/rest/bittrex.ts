@@ -5,7 +5,7 @@ import * as Rx from 'rxjs/Rx'
 import { IBittrexMarket, IBittrexMarketTicker, IBittrexMarketHistory } from '../interfaces/bittrex'
 
 // utils
-import { flattenMarkets, isBTCMarket } from '../utils/markets'
+import { flattenMarkets, isBTCMarket, isActive } from '../utils/markets'
 import { fetchObservable } from '../rest/fetchObservable'
 
 export const fetchBittrexMarkets = () => fetchBittrexObservable('https://bittrex.com/api/v1.1/public/getmarkets') as Rx.Observable<IBittrexMarket[]>
@@ -17,6 +17,7 @@ export const fetchMarketHistory = (market: IBittrexMarket) =>fetchBittrexObserva
 export const getMarkets = () => fetchBittrexMarkets()
     .mergeMap(flattenMarkets)
     .filter(isBTCMarket)
+    .filter(isActive)
 
 export const fetchBittrexObservable = api =>
     fetchObservable(api)

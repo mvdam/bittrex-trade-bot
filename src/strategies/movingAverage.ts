@@ -14,7 +14,7 @@ export const movingAverageStrategy: IStrategyConstructor = (config: IMovingAvera
             }
 
             const useAsHistory = priceHistory.slice(0, config.periodSize)
-            const pricesTotal = sumArray(priceHistory)
+            const pricesTotal = sumArray(useAsHistory)
 
             return pricesTotal / useAsHistory.length
         }
@@ -24,15 +24,13 @@ export const movingAverageStrategy: IStrategyConstructor = (config: IMovingAvera
         const movingAvg = calculateMovingAverage(priceHistory)
         const currentPrice = getLatestPrice(marketState)
 
-        const shouldSell = () => {
-            return movingAvg !== 0
-                && currentPrice >= sellTarget(movingAvg, config.minProfit)
-        }
+        const shouldSell = () =>
+            movingAvg !== 0 &&
+            currentPrice >= sellTarget(movingAvg, config.minProfit)
 
-        const shouldBuy = () => {
-            return movingAvg !== 0
-                && currentPrice <= buyTarget(movingAvg, config.minProfit)
-        }
+        const shouldBuy = () =>
+            movingAvg !== 0 &&
+            currentPrice <= buyTarget(movingAvg, config.minProfit)
 
         return {
             name: 'movingAverage',

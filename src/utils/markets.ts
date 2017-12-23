@@ -14,6 +14,9 @@ export const flattenMarkets = (markets: IBittrexMarket[]) =>
 export const isBTCMarket = (market: IBittrexMarket): boolean =>
     market.BaseCurrency === 'BTC'
 
+export const isActive = (market: IBittrexMarket): boolean =>
+    market.IsActive === true
+
 export const sellTarget = (price: number, minProfit: number) =>
     ( price / 100 ) * ( 100 + minProfit )
 
