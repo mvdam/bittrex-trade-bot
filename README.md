@@ -1,5 +1,15 @@
 # bittrex-trade-bot
+Experimental software that automatically trades cryptocurrency via the Bittrex exchange.
 
+> Disclaimer: I am not an expert on financial markets, risk management or investment strategies. Using this tool is at your own risk!
+
+### Requirements
+* [Node.js](https://nodejs.org/en/download/)
+* NPM (comes with Node.js)
+
+### Installation
+1. `git clone git@github.com:mvdam/bittrex-trade-bot.git`
+2. `cd bittrex-trade-bot && npm install`
 
 ### Run the bot:
 `API_KEY=<your-bittrex-api-key> API_SECRET=<your-bittrex-api-secret> npm start`
