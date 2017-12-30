@@ -33,8 +33,11 @@ export const combineMarketData = (market: IBittrexMarket) =>
 
 export const toMarketState = (market: IBittrexMarket, history: IBittrexMarketHistory[], ticker: IBittrexMarketTicker) => ({
     market,
-    history,
     ticker,
+    history: history.map(h => ({
+        timestamp: parseInt(h.TimeStamp),
+        price: h.Price
+    })),
     orderStatus: {
         isOpen: false,
         type: null,
@@ -44,7 +47,7 @@ export const toMarketState = (market: IBittrexMarket, history: IBittrexMarketHis
 }) as IMarketState
 
 export const getPriceHistory = (marketState: IMarketState) =>
-    marketState.history.map(h => h.Price)
+    marketState.history.map(h => h.price)
 
 export const getLatestPrice = (marketState: IMarketState) =>
     getPriceHistory(marketState) && getPriceHistory(marketState)[0] || 0

@@ -29,5 +29,5 @@ export interface IBittrexMarketTicker {
 }
 
 export interface ITimedBittrexMarketTicker extends IBittrexMarketTicker {
-    timestamp: number
+    
 }

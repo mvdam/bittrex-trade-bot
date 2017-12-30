@@ -1,7 +1,8 @@
 // interfaces
 import { IMarketState } from './markets'
 
-export type IStrategyConstructor = (config: any) => IStrategy
+export type IStrategyConfig = IMovingAverageStrategy | IStopLossStrategy
+export type IStrategyConstructor = (config: IStrategyConfig) => IStrategy
 export type IStrategy = (marketState: IMarketState) => IStrategyDecision
 
 export interface IStrategyDecision {
@@ -14,4 +15,8 @@ export interface IMovingAverageStrategy {
     minPriceHistory: number
     periodSize: number
     minProfit: number
+}
+
+export interface IStopLossStrategy {
+    maxLoss: number
 }
