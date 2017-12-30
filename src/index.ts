@@ -1,8 +1,10 @@
 // functions
+import { tradeBot } from './trader/tradeBot'
+import { map } from 'rxjs/operators/map'
+
+// strategies
 import { movingAverageStrategy } from './strategies/movingAverage'
-import { tradeBot } from './trader/tradeBot';
-import { map } from 'rxjs/operators/map';
-import { stopLossStrategy } from './strategies/stopLoss';
+import { stopLossStrategy } from './strategies/stopLoss'
 
 // constants
 const API_KEY = process.env.API_KEY
@@ -26,11 +28,13 @@ const strategies = [
     })
 ]
 
-tradeBot({
+const config = {
     apiKey: API_KEY,
     apiSecret: API_SECRET,
-    autoBuy: false,
-    autoSell: false,
-    tradeInterval: 10000,
+    autoBuy: AUTO_BUY,
+    autoSell: AUTO_SELL,
+    tradeInterval: ANALYSIS_INTERVAL,
     strategies
-})
+}
+
+tradeBot(config)

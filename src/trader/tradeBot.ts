@@ -6,7 +6,7 @@ import { getMarkets } from '../rest/bittrex'
 
 // utils
 import { applyStrategies } from '../utils/strategies'
-import { combineMarketData } from '../utils/markets'
+import { combineMarketData, updateMarketState, interval, toObservable, updatePriceHistory } from '../utils/markets'
 import { validateConfig } from '../utils/utils'
 
 // interfaces
@@ -18,26 +18,11 @@ const getMarketStates = (): Rx.Observable<IMarketState[]> =>
         .mergeMap(combineMarketData)
         .reduce((acc, curr) => acc.concat(curr), [])
 
-const interval = (timeout: number) =>
-    Rx.Observable.timer(0, timeout)
-
-const toObservable = (marketStates: IMarketState[]) =>
-    Rx.Observable.from(marketStates)
-
-const updateMarketState = (updatedState: IMarketState, marketStates: IMarketState[]) =>
-    marketStates.map((marketState: IMarketState) => 
-        marketState.market.MarketCurrency === updatedState.market.MarketCurrency
-            ? updatedState
-            : marketState
-        )
-
 const onInit = () =>
     console.log('Setup of market states complete! Continue...')
 
-const beforeCycle = () => {
-    console.log('_____________________________')
-    console.log('Check market states...')
-}
+const beforeCycle = () =>
+    console.log(`_____________________________ ${new Date().toString()} _____________________________`)
 
 export const tradeBot = (config: ITraderBotConfig) => {
     validateConfig(config)
@@ -50,12 +35,12 @@ export const tradeBot = (config: ITraderBotConfig) => {
             interval(config.tradeInterval)
                 .do(beforeCycle)
 
-                // flatten states to process 
+                // flatten states to process them separately
                 .mergeMap(() =>
                     toObservable(observeMarketStates))
 
-                // todo: implement price update mechanism
-                // .map( ... => ... )
+                // fetch current price before applying strategies on it
+                .mergeMap(updatePriceHistory)
 
                 // apply market strategies
                 .map(applyStrategies(config.strategies))

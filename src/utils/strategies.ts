@@ -2,12 +2,17 @@
 import { IStrategy } from '../interfaces/strategies'
 import { IMarketState } from '../interfaces/markets'
 import { IBittrexMarketHistory } from '../interfaces/bittrex';
-import { getLatestPrice } from './markets';
+
+// functions
+import { getLatestPrice } from './markets'
+
+// utils
+import { calculateDiff } from './utils'
 
 export const applyStrategies = (strategies: IStrategy[]) =>
     (marketState: IMarketState) => {
         if (shouldBuy(marketState, strategies)) {
-            console.log(`BUY ${marketState.market.MarketCurrency} at ${getLatestPrice(marketState)}BTC`)
+            console.log(`BUY ${marketState.market.MarketCurrency} at ${getLatestPrice(marketState)} BTC`)
             return {
                 ...marketState,
                 orderStatus: {
@@ -22,8 +27,9 @@ export const applyStrategies = (strategies: IStrategy[]) =>
 
         if (shouldSell(marketState, strategies)) {
             // debug
-            const profit = ( getLatestPrice(marketState) / marketState.orderStatus.originalPrice ) * 100
-            console.log(`SELL ${marketState.market.MarketCurrency} at ${profit}%`)
+            const profit = calculateDiff(getLatestPrice(marketState), marketState.orderStatus.originalPrice)
+            console.log(`SELL ${marketState.market.MarketCurrency} at ${getLatestPrice(marketState)} BTC. Profit: ${profit}%`)
+
             return {
                 ...marketState,
                 orderStatus: {

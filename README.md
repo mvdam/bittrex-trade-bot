@@ -25,7 +25,7 @@ Experimental software that automatically trades cryptocurrency via the Bittrex e
 
 > <sup>1</sup> Configurable
 
-> <sup>2</sup> Not yet implemented
+> <sup>2</sup> Not yet implemented. Currently simulated using console logs for testing the algorithm
 
 ### Current results
 This version of the software has an average profit margin of `+1.2%`. We want to increase this in the near future to around `+5%`.
@@ -34,9 +34,14 @@ This version of the software has an average profit margin of `+1.2%`. We want to
 - [x] Add Bittrex transaction fees to the profit calculation
 - [x] Use RxJS
 - [ ] Make frontend pretty
+- [ ] Improve error handling on failing requests
+- [ ] Fetch current BTC balance and buying strategy (amounts / max simultaneous trades etc...)
 - [ ] Extend the `moving average` with [multiple algorithms](https://github.com/oransel/node-talib) to increase profit
 - [ ] Support for multiple markets (i.e. ETH-*)
 
 ### References
 - [Bittrex API documentation](https://bittrex.com/home/api)
 - [YouTube: Building cryptocurrency trading bots](https://www.youtube.com/playlist?list=PL2U3qLYtsXsT5QuFQUtxbfj62K3AiLOse)
+
+### Preview
+![Screenshot of logging](./misc/preview.png)

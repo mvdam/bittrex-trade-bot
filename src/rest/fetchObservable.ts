@@ -10,5 +10,7 @@ export const fetchObservable = api =>
                 observer.next(json)
                 observer.complete()
             })
-            .catch(observer.error)
+            .catch(e => {
+                observer.error(`ERROR while fetching "${api}"! Message: "${e.message}"`)
+            })
     )

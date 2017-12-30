@@ -35,7 +35,7 @@ export const toMarketState = (market: IBittrexMarket, history: IBittrexMarketHis
     market,
     ticker,
     history: history.map(h => ({
-        timestamp: parseInt(h.TimeStamp),
+        timestamp: new Date(h.TimeStamp).valueOf(),
         price: h.Price
     })),
     orderStatus: {
@@ -46,6 +46,17 @@ export const toMarketState = (market: IBittrexMarket, history: IBittrexMarketHis
     }
 }) as IMarketState
 
+export const updatePriceHistory = (marketState: IMarketState): Rx.Observable<IMarketState> =>
+    fetchBittrexMarketTicker(marketState.market)
+        .map((ticker: IBittrexMarketTicker) => ({
+            ...marketState,
+            ticker,
+            history: [{
+                timestamp: Date.now(),
+                price: ticker.Ask
+            }, ...marketState.history ]
+        }))
+
 export const getPriceHistory = (marketState: IMarketState) =>
     marketState.history.map(h => h.price)
 
@@ -54,3 +65,16 @@ export const getLatestPrice = (marketState: IMarketState) =>
 
 export const getPreviousPrice = (marketState: IMarketState) =>
     getPriceHistory(marketState) && getPriceHistory(marketState)[1] || 0
+
+export const interval = (timeout: number) =>
+    Rx.Observable.timer(0, timeout)
+
+export const toObservable = (marketStates: IMarketState[]) =>
+    Rx.Observable.from(marketStates)
+
+
+export const updateMarketState = (updatedState: IMarketState, marketStates: IMarketState[]) =>
+    marketStates.map((marketState: IMarketState) => 
+        marketState.market.MarketCurrency === updatedState.market.MarketCurrency
+            ? updatedState
+            : marketState)
