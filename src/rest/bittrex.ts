@@ -14,10 +14,11 @@ export const fetchBittrexMarketTicker = (market: IBittrexMarket) => fetchBittrex
 
 export const fetchMarketHistory = (market: IBittrexMarket) =>fetchBittrexObservable(`https://bittrex.com/api/v1.1/public/getmarkethistory?market=${market.BaseCurrency}-${market.MarketCurrency}`) as Rx.Observable<IBittrexMarketHistory[]>
 
-export const getMarkets = () => fetchBittrexMarkets()
-    .mergeMap(flattenMarkets)
-    .filter(isBTCMarket)
-    .filter(isActive)
+export const getMarkets = (): Rx.Observable<IBittrexMarket> =>
+    fetchBittrexMarkets()
+        .mergeMap(flattenMarkets)
+        .filter(isBTCMarket)
+        .filter(isActive)
 
 export const fetchBittrexObservable = api =>
     fetchObservable(api)

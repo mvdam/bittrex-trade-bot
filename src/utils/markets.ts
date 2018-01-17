@@ -23,7 +23,7 @@ export const sellTarget = (price: number, minProfit: number) =>
 export const buyTarget = (price: number, minProfit: number) =>
     ( price / 100 ) * ( 100 - minProfit )
 
-export const combineMarketData = (market: IBittrexMarket) =>
+export const combineMarketData = (market: IBittrexMarket): Rx.Observable<IMarketState> =>
     Rx.Observable.forkJoin(
         fetchMarketHistory(market),
         fetchBittrexMarketTicker(market),
@@ -31,7 +31,7 @@ export const combineMarketData = (market: IBittrexMarket) =>
             toMarketState(market, history, ticker)
     )
 
-export const toMarketState = (market: IBittrexMarket, history: IBittrexMarketHistory[], ticker: IBittrexMarketTicker) => ({
+export const toMarketState = (market: IBittrexMarket, history: IBittrexMarketHistory[], ticker: IBittrexMarketTicker): IMarketState => ({
     market,
     ticker,
     history: history.map(h => ({
@@ -44,7 +44,7 @@ export const toMarketState = (market: IBittrexMarket, history: IBittrexMarketHis
         orderPrice: null,
         originalPrice: null
     }
-}) as IMarketState
+})
 
 export const updatePriceHistory = (marketState: IMarketState): Rx.Observable<IMarketState> =>
     fetchBittrexMarketTicker(marketState.market)

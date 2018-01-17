@@ -16,7 +16,7 @@ import { IMarketState } from '../interfaces/markets'
 const getMarketStates = (): Rx.Observable<IMarketState[]> =>
     getMarkets()
         .mergeMap(combineMarketData)
-        .reduce((acc, curr) => acc.concat(curr), [])
+        .toArray()
 
 const onInit = () =>
     console.log('Setup of market states complete! Continue...')
@@ -32,6 +32,7 @@ export const tradeBot = (config: ITraderBotConfig) => {
         .subscribe((marketStates: IMarketState[]) => {
             let observeMarketStates = [ ...marketStates ]
 
+            // todo: do this with switchmap instead!
             interval(config.tradeInterval)
                 .do(beforeCycle)
 
