@@ -1,9 +1,9 @@
 // libs
-import * as Rx from 'rxjs/Rx'
+import { Observable } from 'rxjs'
 import fetch from 'node-fetch'
 
 export const fetchObservable = api =>
-    Rx.Observable.create(observer =>
+    Observable.create(observer =>
         fetch(api)
             .then(res => res.json())
             .then(json => {

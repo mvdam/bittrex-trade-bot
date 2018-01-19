@@ -1,7 +1,6 @@
 // interfaces
 import { IStrategy } from '../interfaces/strategies'
 import { IMarketState } from '../interfaces/markets'
-import { IBittrexMarketHistory } from '../interfaces/bittrex';
 
 // functions
 import { getLatestPrice } from './markets'

@@ -1,5 +1,5 @@
 // libs
-import * as Rx from 'rxjs/Rx'
+import { Observable } from 'rxjs'
 
 // rest
 import { getMarkets } from '../rest/bittrex'
@@ -13,7 +13,7 @@ import { validateConfig } from '../utils/utils'
 import { ITraderBotConfig } from '../interfaces/config'
 import { IMarketState } from '../interfaces/markets'
 
-const getMarketStates = (): Rx.Observable<IMarketState[]> =>
+const getMarketStates = (): Observable<IMarketState[]> =>
     getMarkets()
         .mergeMap(combineMarketData)
         .toArray()

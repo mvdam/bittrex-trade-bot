@@ -1,6 +1,5 @@
 // functions
 import { tradeBot } from './trader/tradeBot'
-import { map } from 'rxjs/operators/map'
 
 // strategies
 import { movingAverageStrategy } from './strategies/movingAverage'

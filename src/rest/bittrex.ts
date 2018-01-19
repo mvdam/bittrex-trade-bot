@@ -1,5 +1,5 @@
 // libs
-import * as Rx from 'rxjs/Rx'
+import { Observable } from 'rxjs'
 
 // interfaces
 import { IBittrexMarket, IBittrexMarketTicker, IBittrexMarketHistory } from '../interfaces/bittrex'
@@ -8,13 +8,13 @@ import { IBittrexMarket, IBittrexMarketTicker, IBittrexMarketHistory } from '../
 import { flattenMarkets, isBTCMarket, isActive } from '../utils/markets'
 import { fetchObservable } from '../rest/fetchObservable'
 
-export const fetchBittrexMarkets = () => fetchBittrexObservable('https://bittrex.com/api/v1.1/public/getmarkets') as Rx.Observable<IBittrexMarket[]>
+export const fetchBittrexMarkets = () => fetchBittrexObservable('https://bittrex.com/api/v1.1/public/getmarkets') as Observable<IBittrexMarket[]>
 
-export const fetchBittrexMarketTicker = (market: IBittrexMarket) => fetchBittrexObservable(`https://bittrex.com/api/v1.1/public/getticker?market=${market.BaseCurrency}-${market.MarketCurrency}`) as Rx.Observable<IBittrexMarketTicker>
+export const fetchBittrexMarketTicker = (market: IBittrexMarket) => fetchBittrexObservable(`https://bittrex.com/api/v1.1/public/getticker?market=${market.BaseCurrency}-${market.MarketCurrency}`) as Observable<IBittrexMarketTicker>
 
-export const fetchMarketHistory = (market: IBittrexMarket) =>fetchBittrexObservable(`https://bittrex.com/api/v1.1/public/getmarkethistory?market=${market.BaseCurrency}-${market.MarketCurrency}`) as Rx.Observable<IBittrexMarketHistory[]>
+export const fetchMarketHistory = (market: IBittrexMarket) =>fetchBittrexObservable(`https://bittrex.com/api/v1.1/public/getmarkethistory?market=${market.BaseCurrency}-${market.MarketCurrency}`) as Observable<IBittrexMarketHistory[]>
 
-export const getMarkets = (): Rx.Observable<IBittrexMarket> =>
+export const getMarkets = (): Observable<IBittrexMarket> =>
     fetchBittrexMarkets()
         .mergeMap(flattenMarkets)
         .filter(isBTCMarket)

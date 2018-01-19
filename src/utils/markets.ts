@@ -1,5 +1,5 @@
 // libs
-import * as Rx from 'rxjs/Rx'
+import { Observable } from 'rxjs'
 
 // interfaces
 import { IBittrexMarket, IBittrexMarketTicker, IBittrexMarketHistory } from '../interfaces/bittrex'
@@ -9,7 +9,7 @@ import { IMarketState } from '../interfaces/markets'
 import { fetchBittrexMarketTicker, fetchMarketHistory } from '../rest/bittrex'
 
 export const flattenMarkets = (markets: IBittrexMarket[]) =>
-    Rx.Observable.from(markets)
+    Observable.from(markets)
 
 export const isBTCMarket = (market: IBittrexMarket): boolean =>
     market.BaseCurrency === 'BTC'
@@ -23,8 +23,8 @@ export const sellTarget = (price: number, minProfit: number) =>
 export const buyTarget = (price: number, minProfit: number) =>
     ( price / 100 ) * ( 100 - minProfit )
 
-export const combineMarketData = (market: IBittrexMarket): Rx.Observable<IMarketState> =>
-    Rx.Observable.forkJoin(
+export const combineMarketData = (market: IBittrexMarket): Observable<IMarketState> =>
+    Observable.forkJoin(
         fetchMarketHistory(market),
         fetchBittrexMarketTicker(market),
         (history: IBittrexMarketHistory[], ticker: IBittrexMarketTicker) =>
@@ -46,7 +46,7 @@ export const toMarketState = (market: IBittrexMarket, history: IBittrexMarketHis
     }
 })
 
-export const updatePriceHistory = (marketState: IMarketState): Rx.Observable<IMarketState> =>
+export const updatePriceHistory = (marketState: IMarketState): Observable<IMarketState> =>
     fetchBittrexMarketTicker(marketState.market)
         .map((ticker: IBittrexMarketTicker) => ({
             ...marketState,
@@ -67,10 +67,10 @@ export const getPreviousPrice = (marketState: IMarketState) =>
     getPriceHistory(marketState) && getPriceHistory(marketState)[1] || 0
 
 export const interval = (timeout: number) =>
-    Rx.Observable.timer(0, timeout)
+    Observable.timer(0, timeout)
 
 export const toObservable = (marketStates: IMarketState[]) =>
-    Rx.Observable.from(marketStates)
+    Observable.from(marketStates)
 
 
 export const updateMarketState = (updatedState: IMarketState, marketStates: IMarketState[]) =>
