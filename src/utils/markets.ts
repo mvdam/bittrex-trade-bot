@@ -8,7 +8,7 @@ import { IMarketState } from '../interfaces/markets'
 // utils
 import { fetchBittrexMarketTicker, fetchMarketHistory } from '../rest/bittrex'
 
-export const flattenMarkets = (markets: IBittrexMarket[]) =>
+export const flattenMarkets = (markets: IBittrexMarket[]): Observable<IBittrexMarket> =>
     Observable.from(markets)
 
 export const isBTCMarket = (market: IBittrexMarket): boolean =>
@@ -17,10 +17,10 @@ export const isBTCMarket = (market: IBittrexMarket): boolean =>
 export const isActive = (market: IBittrexMarket): boolean =>
     market.IsActive === true
 
-export const sellTarget = (price: number, minProfit: number) =>
+export const sellTarget = (price: number, minProfit: number): number =>
     ( price / 100 ) * ( 100 + minProfit )
 
-export const buyTarget = (price: number, minProfit: number) =>
+export const buyTarget = (price: number, minProfit: number): number =>
     ( price / 100 ) * ( 100 - minProfit )
 
 export const combineMarketData = (market: IBittrexMarket): Observable<IMarketState> =>
@@ -57,23 +57,22 @@ export const updatePriceHistory = (marketState: IMarketState): Observable<IMarke
             }, ...marketState.history ]
         }))
 
-export const getPriceHistory = (marketState: IMarketState) =>
+export const getPriceHistory = (marketState: IMarketState): number[] =>
     marketState.history.map(h => h.price)
 
-export const getLatestPrice = (marketState: IMarketState) =>
+export const getLatestPrice = (marketState: IMarketState): number =>
     getPriceHistory(marketState) && getPriceHistory(marketState)[0] || 0
 
-export const getPreviousPrice = (marketState: IMarketState) =>
+export const getPreviousPrice = (marketState: IMarketState): number =>
     getPriceHistory(marketState) && getPriceHistory(marketState)[1] || 0
 
-export const interval = (timeout: number) =>
+export const interval = (timeout: number): Observable<number> =>
     Observable.timer(0, timeout)
 
-export const toObservable = (marketStates: IMarketState[]) =>
+export const toObservable = (marketStates: IMarketState[]): Observable<IMarketState> =>
     Observable.from(marketStates)
 
-
-export const updateMarketState = (updatedState: IMarketState, marketStates: IMarketState[]) =>
+export const updateMarketState = (updatedState: IMarketState, marketStates: IMarketState[]): IMarketState[] =>
     marketStates.map((marketState: IMarketState) => 
         marketState.market.MarketCurrency === updatedState.market.MarketCurrency
             ? updatedState

@@ -2,7 +2,7 @@
 import { Observable } from 'rxjs'
 import fetch from 'node-fetch'
 
-export const fetchObservable = api =>
+export const fetchObservable = (api: string): Observable<any> =>
     Observable.create(observer =>
         fetch(api)
             .then(res => res.json())

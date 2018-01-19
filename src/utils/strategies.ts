@@ -9,7 +9,7 @@ import { getLatestPrice } from './markets'
 import { calculateDiff } from './utils'
 
 export const applyStrategies = (strategies: IStrategy[]) =>
-    (marketState: IMarketState) => {
+    (marketState: IMarketState): IMarketState => {
         if (shouldBuy(marketState, strategies)) {
             console.log(`BUY ${marketState.market.MarketCurrency} at ${getLatestPrice(marketState)} BTC`)
             return {
@@ -43,10 +43,10 @@ export const applyStrategies = (strategies: IStrategy[]) =>
         return marketState
     }
 
-const shouldBuy = (marketState: IMarketState, strategies: IStrategy[]) =>
+const shouldBuy = (marketState: IMarketState, strategies: IStrategy[]): boolean =>
     !marketState.orderStatus.isOpen &&
     strategies.some(strategy => strategy(marketState).shouldBuy() === true)
 
-const shouldSell = (marketState: IMarketState, strategies: IStrategy[]) =>
+const shouldSell = (marketState: IMarketState, strategies: IStrategy[]): boolean =>
     marketState.orderStatus.isOpen &&
     strategies.some(strategy => strategy(marketState).shouldSell() === true)

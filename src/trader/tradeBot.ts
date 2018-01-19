@@ -1,5 +1,5 @@
 // libs
-import { Observable } from 'rxjs'
+import { Observable, Subscription } from 'rxjs'
 
 // rest
 import { getMarkets } from '../rest/bittrex'
@@ -18,13 +18,13 @@ const getMarketStates = (): Observable<IMarketState[]> =>
         .mergeMap(combineMarketData)
         .toArray()
 
-const onInit = () =>
+const onInit = (): void =>
     console.log('Setup of market states complete! Continue...')
 
-const beforeCycle = () =>
+const beforeCycle = (): void =>
     console.log(`_____________________________ ${new Date().toString()} _____________________________`)
 
-export const tradeBot = (config: ITraderBotConfig) => {
+export const tradeBot = (config: ITraderBotConfig): Subscription => {
     validateConfig(config)
 
     return getMarketStates()

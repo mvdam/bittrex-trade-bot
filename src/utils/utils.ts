@@ -3,10 +3,10 @@ import { ITraderBotConfig } from '../interfaces/config'
 export const sumArray = (arr: number[]): number =>
     arr.reduce((a, b) => a + b, 0)
 
-export const calculateDiff = (newVal: number, prevVal: number) =>
+export const calculateDiff = (newVal: number, prevVal: number): number =>
     ( (newVal / prevVal) * 100 ) - 100
 
-export const validateConfig = (config: ITraderBotConfig) => {
+export const validateConfig = (config: ITraderBotConfig): void => {
     if (!config.apiKey) {
         throw new Error('API_KEY not provided!')
     } else if (!config.apiSecret) {

@@ -9,12 +9,12 @@ export const stopLossStrategy: IStrategyConstructor = (config: IStopLossStrategy
     (marketState: IMarketState): IStrategyDecision => {
         const currentPrice = getLatestPrice(marketState)
 
-        const shouldSell = () =>
+        const shouldSell = (): boolean =>
             // when current price is equal of lower than the buying price minus the max loss
             currentPrice <= marketState.orderStatus.originalPrice - config.maxLoss
 
         // stop loss strategy should only sell stuff
-        const shouldBuy = () => false
+        const shouldBuy = (): boolean => false
 
         return {
             name: 'stopLoss',
