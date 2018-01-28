@@ -6,7 +6,10 @@ import { IBittrexMarket, IBittrexMarketTicker, IBittrexMarketHistory } from '../
 import { IMarketState } from '../interfaces/markets'
 
 // utils
-import { fetchBittrexMarketTicker, fetchMarketHistory } from '../rest/bittrex'
+import { fetchBittrexMarketTicker, fetchMarketHistory, getMarkets } from '../rest/bittrex'
+import { IStrategy } from '../interfaces/strategies'
+import { afterCycle, beforeCycle } from './utils'
+import { applyStrategies } from './strategies'
 
 export const flattenMarkets = (markets: IBittrexMarket[]): Observable<IBittrexMarket> =>
     Observable.from(markets)
@@ -72,8 +75,27 @@ export const interval = (timeout: number): Observable<number> =>
 export const toObservable = (marketStates: IMarketState[]): Observable<IMarketState> =>
     Observable.from(marketStates)
 
-export const updateMarketState = (updatedState: IMarketState, marketStates: IMarketState[]): IMarketState[] =>
-    marketStates.map((marketState: IMarketState) => 
-        marketState.market.MarketCurrency === updatedState.market.MarketCurrency
-            ? updatedState
-            : marketState)
+export const getMarketStates = (): Observable<IMarketState[]> =>
+  getMarkets()
+    .mergeMap(combineMarketData)
+    .toArray()
+
+export const checkMarketStates = (marketStates: IMarketState[], strategies: IStrategy[]): Observable<IMarketState[]> =>
+  Observable.of(marketStates)
+    .do(beforeCycle)
+
+    // flatten states to process them separately
+    .mergeMap(() =>
+      toObservable(marketStates))
+
+    // fetch current price before applying strategies on it
+    .mergeMap(updatePriceHistory)
+
+    // apply market strategies
+    .map(applyStrategies(strategies))
+
+    // combine as array
+    .toArray()
+
+    // after cycle
+    .do(afterCycle)

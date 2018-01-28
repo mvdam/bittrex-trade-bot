@@ -21,3 +21,12 @@ export const validateConfig = (config: ITraderBotConfig): void => {
         throw new Error('Missing configuration for "strategies"')
     }
 }
+
+export const onInit = (): void =>
+  console.log('Setup of market states complete! Continue...')
+
+export const beforeCycle = (): void =>
+  console.log(`_____________________________ ${new Date().toString()} _____________________________`)
+
+export const afterCycle = (): void =>
+  console.log(``)

@@ -23,7 +23,7 @@ const strategies = [
         minProfit: MIN_PROFIT_PERCENTAGE + TRANSACTION_FEE_PERCENTAGE
     }),
     stopLossStrategy({
-        maxLoss: 0.0001
+        maxLoss: STOP_LOSS
     })
 ]
 

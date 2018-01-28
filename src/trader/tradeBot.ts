@@ -1,28 +1,36 @@
 // libs
-import { Observable, Subscription } from 'rxjs'
-
-// rest
-import { getMarkets } from '../rest/bittrex'
+import { Observable, Subscription, Observer } from 'rxjs'
 
 // utils
-import { applyStrategies } from '../utils/strategies'
-import { combineMarketData, updateMarketState, interval, toObservable, updatePriceHistory } from '../utils/markets'
-import { validateConfig } from '../utils/utils'
+import { checkMarketStates, getMarketStates } from '../utils/markets'
+import { onInit, validateConfig } from '../utils/utils'
 
 // interfaces
 import { ITraderBotConfig } from '../interfaces/config'
 import { IMarketState } from '../interfaces/markets'
 
-const getMarketStates = (): Observable<IMarketState[]> =>
-    getMarkets()
-        .mergeMap(combineMarketData)
-        .toArray()
+const recursiveMarketStateChecker = (marketStates: IMarketState[], config: ITraderBotConfig) =>
+  Observable.create((observer: Observer<IMarketState[]>) => {
 
-const onInit = (): void =>
-    console.log('Setup of market states complete! Continue...')
+    const checkStates = (marketStates: IMarketState[]) => {
+      let next = marketStates
 
-const beforeCycle = (): void =>
-    console.log(`_____________________________ ${new Date().toString()} _____________________________`)
+      checkMarketStates(marketStates, config.strategies)
+        .subscribe((updatedStates: IMarketState[]) => {
+          observer.next(updatedStates)
+          next = updatedStates
+        }, () => {
+          // some error handling
+        }, () => {
+          Observable.timer(config.tradeInterval)
+            .subscribe(() => {
+              checkStates(next)
+            })
+        })
+    }
+
+    checkStates(marketStates)
+  })
 
 export const tradeBot = (config: ITraderBotConfig): Subscription => {
     validateConfig(config)
@@ -30,29 +38,9 @@ export const tradeBot = (config: ITraderBotConfig): Subscription => {
     return getMarketStates()
         .do(onInit)
         .subscribe((marketStates: IMarketState[]) => {
-            let observeMarketStates = [ ...marketStates ]
-
-            // todo: do this with switchmap instead!
-            interval(config.tradeInterval)
-                .do(beforeCycle)
-
-                // flatten states to process them separately
-                .mergeMap(() =>
-                    toObservable(observeMarketStates))
-
-                // fetch current price before applying strategies on it
-                .mergeMap(updatePriceHistory)
-
-                // apply market strategies
-                .map(applyStrategies(config.strategies))
-
-                // update state
-                .do((updatedState: IMarketState) =>
-                    observeMarketStates = updateMarketState(updatedState, observeMarketStates))
-
-                // subscribe
-                .subscribe((processedMarketStates: IMarketState) => {
-                    // to be implemented...
-                })
+          recursiveMarketStateChecker(marketStates, config)
+            .subscribe((marketStates: IMarketState[]) => {
+              // ...
+            })
         })
 }
