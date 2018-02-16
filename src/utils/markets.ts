@@ -11,6 +11,9 @@ import { IStrategy } from '../interfaces/strategies'
 import { afterCycle, beforeCycle } from './utils'
 import { applyStrategies } from './strategies'
 
+// constants
+import { MAX_RETRY } from '../constants/constants'
+
 export const flattenMarkets = (markets: IBittrexMarket[]): Observable<IBittrexMarket> =>
     Observable.from(markets)
 
@@ -51,6 +54,7 @@ export const toMarketState = (market: IBittrexMarket, history: IBittrexMarketHis
 
 export const updatePriceHistory = (marketState: IMarketState): Observable<IMarketState> =>
     fetchBittrexMarketTicker(marketState.market)
+        .retry(MAX_RETRY)
         .map((ticker: IBittrexMarketTicker) => ({
             ...marketState,
             ticker,

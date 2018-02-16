@@ -8,6 +8,9 @@ import { IBittrexMarket, IBittrexMarketTicker, IBittrexMarketHistory } from '../
 import { flattenMarkets, isBTCMarket, isActive } from '../utils/markets'
 import { fetchObservable } from '../rest/fetchObservable'
 
+// constants
+import { MAX_RETRY } from '../constants/constants'
+
 export const fetchBittrexMarkets = (): Observable<IBittrexMarket[]> =>
     fetchBittrexObservable('https://bittrex.com/api/v1.1/public/getmarkets')
 
@@ -19,6 +22,7 @@ export const fetchMarketHistory = (market: IBittrexMarket): Observable<IBittrexM
 
 export const getMarkets = (): Observable<IBittrexMarket> =>
     fetchBittrexMarkets()
+        .retry(MAX_RETRY)
         .mergeMap(flattenMarkets)
         .filter(isBTCMarket)
         .filter(isActive)

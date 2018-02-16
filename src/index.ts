@@ -14,7 +14,7 @@ const AUTO_SELL = false
 const MIN_PROFIT_PERCENTAGE = 1
 const TRANSACTION_FEE_PERCENTAGE = 0.5
 const STOP_LOSS = 0.0001
-const ANALYSIS_INTERVAL = 10000
+const ANALYSIS_INTERVAL = 20000
 
 const strategies = [
     movingAverageStrategy({

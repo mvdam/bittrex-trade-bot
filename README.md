@@ -33,9 +33,10 @@ This version of the software has an average profit margin of `+1.2%`. We want to
 ### Todo
 - [x] Add Bittrex transaction fees to the profit calculation
 - [x] Use RxJS
-- [ ] Make frontend pretty
-- [ ] Improve error handling on failing requests
+- [x] Improve error handling on failing requests
 - [ ] Fetch current BTC balance and buying strategy (amounts / max simultaneous trades etc...)
+- [ ] Implement Telegram / Slack API to send trade updates
+- [ ] Make frontend pretty
 - [ ] Extend the `moving average` with [multiple algorithms](https://github.com/oransel/node-talib) to increase profit
 - [ ] Support for multiple markets (i.e. ETH-*)
 
