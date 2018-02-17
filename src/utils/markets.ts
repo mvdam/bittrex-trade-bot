@@ -6,7 +6,7 @@ import { IBittrexMarket, IBittrexMarketTicker, IBittrexMarketHistory } from '../
 import { IMarketState } from '../interfaces/markets'
 
 // utils
-import { fetchBittrexMarketTicker, fetchMarketHistory, getMarkets } from '../rest/bittrex'
+import { fetchBittrexMarketTicker, fetchMarketHistory, getMarkets } from '../rest/bittrex/markets'
 import { IStrategy } from '../interfaces/strategies'
 import { afterCycle, beforeCycle } from './utils'
 import { applyStrategies } from './strategies'

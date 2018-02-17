@@ -6,9 +6,10 @@ import { movingAverageStrategy } from './strategies/movingAverage'
 import { stopLossStrategy } from './strategies/stopLoss'
 
 // constants
-const API_KEY = process.env.API_KEY
-const API_SECRET = process.env.API_SECRET
+import { API_KEY, API_SECRET } from './constants/constants'
+import { fetchAccountBalances } from './rest/bittrex/account'
 
+// constants
 const AUTO_BUY = false
 const AUTO_SELL = false
 const MIN_PROFIT_PERCENTAGE = 1

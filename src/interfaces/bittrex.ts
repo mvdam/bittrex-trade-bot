@@ -28,6 +28,12 @@ export interface IBittrexMarketTicker {
     Last: number
 }
 
-export interface ITimedBittrexMarketTicker extends IBittrexMarketTicker {
-    
+export interface ITimedBittrexMarketTicker extends IBittrexMarketTicker {}
+
+export interface IBittrexAccountBalance {
+  Currency: string
+  Balance: number
+  Available: number
+  Pending: number
+  CryptoAddress: string | null
 }
