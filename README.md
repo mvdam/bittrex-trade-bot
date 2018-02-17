@@ -1,21 +1,25 @@
 # bittrex-trade-bot
 Experimental software that automatically trades cryptocurrency via the Bittrex exchange.
 
-> Disclaimer: I am not an expert on financial markets, risk management or investment strategies. Using this tool is at your own risk!
+> Disclaimer: I am not an expert on financial markets, risk management or investment strategies. Use this tool at own risk!
 
 ### Requirements
 * [Node.js](https://nodejs.org/en/download/)
 * NPM (comes with Node.js)
+* [TypeScript](https://www.typescriptlang.org/index.html#download-links)
 
 ### Installation
 1. `git clone git@github.com:mvdam/bittrex-trade-bot.git`
 2. `cd bittrex-trade-bot && npm install`
 
 ### Run the bot:
+##### Bash
 `API_KEY=<your-bittrex-api-key> API_SECRET=<your-bittrex-api-secret> npm start`
+##### PowerShell
+`$env:API_KEY='<your-bittrex-api-key>' $env:API_SECRET='<your-bittrex-api-secret>' npm start`
 
 ### How it works
-1. Fetches all BTC-* markets from [Bittrex API](https://bittrex.com/api/v1.1/public/getmarketsummaries)
+1. Fetches all `BTC-*` markets from [Bittrex API](https://bittrex.com/api/v1.1/public/getmarketsummaries)
 2. Fetches price history for every market using the [Bittrex API](https://bittrex.com/api/v1.1/public/getmarkethistory?market=BTC-ETH)
 3. Calculates historical moving average of the last 15<sup>1</sup> `BUY` orders
 4. Continuously (every 10 seconds<sup>1</sup>) updates the moving average based on current `ASK` price
@@ -34,7 +38,7 @@ This version of the software has an average profit margin of `+1.2%`. We want to
 - [x] Add Bittrex transaction fees to the profit calculation
 - [x] Use RxJS
 - [x] Improve error handling on failing requests
-- [ ] Fetch current BTC balance and buying strategy (amounts / max simultaneous trades etc...)
+- [ ] [WIP] Fetch current BTC balance and buying strategy (amounts / max simultaneous trades etc...)
 - [ ] Implement Telegram / Slack API to send trade updates
 - [ ] Make frontend pretty
 - [ ] Extend the `moving average` with [multiple algorithms](https://github.com/oransel/node-talib) to increase profit
