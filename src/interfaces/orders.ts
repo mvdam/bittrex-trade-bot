@@ -4,6 +4,7 @@ export interface IOrderStatus {
     orderPrice: number | null
     originalPrice: number | null
     time: number | null
+    amount: number | null
 }
 
 export interface IOrdersState {

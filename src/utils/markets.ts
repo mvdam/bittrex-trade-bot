@@ -50,7 +50,8 @@ export const toMarketState = (market: IBittrexMarket, history: IBittrexMarketHis
         type: null,
         orderPrice: null,
         originalPrice: null,
-        time: null
+        time: null,
+        amount: null
     }
 })
 

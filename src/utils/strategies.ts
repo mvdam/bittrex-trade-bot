@@ -12,7 +12,8 @@ import { calculateDiff } from './utils'
 export const applyStrategies = (marketStates: IMarketState[], config: ITraderBotConfig) =>
     (marketState: IMarketState): IMarketState => {
         if (shouldBuy(marketState, marketStates, config)) {
-            console.log(`BUY ${marketState.market.MarketCurrency} at ${getLatestPrice(marketState)} BTC`)
+            const amount = buyAmount(marketState, config)
+            console.log(`BUY ${amount} * ${marketState.market.MarketCurrency} at ${getLatestPrice(marketState)} BTC`)
             return {
                 ...marketState,
                 orderStatus: {
@@ -21,7 +22,8 @@ export const applyStrategies = (marketStates: IMarketState[], config: ITraderBot
                     type: 'BUY',
                     orderPrice: getLatestPrice(marketState),
                     originalPrice: getLatestPrice(marketState),
-                    time: Date.now()
+                    time: Date.now(),
+                    amount
                 }
             }
         }
@@ -29,7 +31,7 @@ export const applyStrategies = (marketStates: IMarketState[], config: ITraderBot
         if (shouldSell(marketState, marketStates, config)) {
             // debug
             const profit = calculateDiff(getLatestPrice(marketState), marketState.orderStatus.originalPrice)
-            console.log(`SELL ${marketState.market.MarketCurrency} at ${getLatestPrice(marketState)} BTC. Profit: ${profit}%`)
+            console.log(`SELL ${marketState.orderStatus.amount} * ${marketState.market.MarketCurrency} at ${getLatestPrice(marketState)} BTC. Profit: ${profit}%`)
 
             return {
                 ...marketState,
@@ -38,6 +40,7 @@ export const applyStrategies = (marketStates: IMarketState[], config: ITraderBot
                     isOpen: false,
                     type: null,
                     orderPrice: getLatestPrice(marketState),
+                    amount: null,
                     time: null
                 }
             }
@@ -46,9 +49,21 @@ export const applyStrategies = (marketStates: IMarketState[], config: ITraderBot
         return marketState
     }
 
+const buyAmount = (marketState: IMarketState, config: ITraderBotConfig): number =>
+    config.tradeAmountBTC / getLatestPrice(marketState)
+
+// check if the amount we want to spend is nog below the minimum trade size
+const canAfford = (marketState: IMarketState, config: ITraderBotConfig): boolean =>
+    buyAmount(marketState, config) >= marketState.market.MinTradeSize
+
 const shouldBuy = (marketState: IMarketState, marketStates: IMarketState[], config: ITraderBotConfig): boolean =>
-    getOpenOrders(marketStates).length < config.maxSimultaneousTrades &&
+    // skip if we already bought this
     !marketState.orderStatus.isOpen &&
+    // skip when the maxSimultaneousTrades will exceed
+    getOpenOrders(marketStates).length < config.maxSimultaneousTrades &&
+    // check if the amount we want to spend is nog below the minimum trade size
+    canAfford(marketState, config) &&
+    // check all configured strategies
     config.strategies.some(strategy => strategy(marketState).shouldBuy() === true)
 
 const shouldSell = (marketState: IMarketState, marketStates: IMarketState[], config: ITraderBotConfig): boolean =>

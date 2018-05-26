@@ -8,5 +8,6 @@ export interface ITraderBotConfig {
     autoSell: boolean
     maxSimultaneousTrades: number
     tradeInterval: number
+    tradeAmountBTC: number
     strategies: IStrategy[]
 }
