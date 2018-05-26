@@ -15,7 +15,7 @@ const recursiveMarketStateChecker = (marketStates: IMarketState[], config: ITrad
     const checkStates = (marketStates: IMarketState[]) => {
       let next = marketStates
 
-      checkMarketStates(marketStates, config.strategies)
+      checkMarketStates(marketStates, config)
         .subscribe((updatedStates: IMarketState[]) => {
           observer.next(updatedStates)
           next = updatedStates

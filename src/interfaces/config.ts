@@ -6,6 +6,7 @@ export interface ITraderBotConfig {
     apiSecret: string
     autoBuy: boolean
     autoSell: boolean
+    maxSimultaneousTrades: number
     tradeInterval: number
     strategies: IStrategy[]
 }

@@ -9,6 +9,9 @@ import { stopLossStrategy } from './strategies/stopLoss'
 import { API_KEY, API_SECRET } from './constants/constants'
 import { fetchAccountBalances } from './rest/bittrex/account'
 
+// interfaces
+import { ITraderBotConfig } from './interfaces/config'
+
 // constants
 const AUTO_BUY = false
 const AUTO_SELL = false
@@ -28,11 +31,12 @@ const strategies = [
     })
 ]
 
-const config = {
+const config: ITraderBotConfig = {
     apiKey: API_KEY,
     apiSecret: API_SECRET,
     autoBuy: AUTO_BUY,
     autoSell: AUTO_SELL,
+    maxSimultaneousTrades: 1,
     tradeInterval: ANALYSIS_INTERVAL,
     strategies
 }

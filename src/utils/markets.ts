@@ -4,6 +4,7 @@ import { Observable } from 'rxjs'
 // interfaces
 import { IBittrexMarket, IBittrexMarketTicker, IBittrexMarketHistory } from '../interfaces/bittrex'
 import { IMarketState } from '../interfaces/markets'
+import { ITraderBotConfig } from '../interfaces/config';
 
 // utils
 import { fetchBittrexMarketTicker, fetchMarketHistory, getMarkets } from '../rest/bittrex/markets'
@@ -48,7 +49,8 @@ export const toMarketState = (market: IBittrexMarket, history: IBittrexMarketHis
         isOpen: false,
         type: null,
         orderPrice: null,
-        originalPrice: null
+        originalPrice: null,
+        time: null
     }
 })
 
@@ -84,7 +86,10 @@ export const getMarketStates = (): Observable<IMarketState[]> =>
     .mergeMap(combineMarketData)
     .toArray()
 
-export const checkMarketStates = (marketStates: IMarketState[], strategies: IStrategy[]): Observable<IMarketState[]> =>
+export const getOpenOrders = (marketStates: IMarketState[]): IMarketState[] =>
+    marketStates.filter(state => state.orderStatus.isOpen === true)
+
+export const checkMarketStates = (marketStates: IMarketState[], config: ITraderBotConfig): Observable<IMarketState[]> =>
   Observable.of(marketStates)
     .do(beforeCycle)
 
@@ -96,7 +101,7 @@ export const checkMarketStates = (marketStates: IMarketState[], strategies: IStr
     .mergeMap(updatePriceHistory)
 
     // apply market strategies
-    .map(applyStrategies(strategies))
+    .map(applyStrategies(marketStates, config))
 
     // combine as array
     .toArray()

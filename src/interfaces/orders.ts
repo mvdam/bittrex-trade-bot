@@ -3,6 +3,7 @@ export interface IOrderStatus {
     type: 'BUY' | 'SELL' | null
     orderPrice: number | null
     originalPrice: number | null
+    time: number | null
 }
 
 export interface IOrdersState {
