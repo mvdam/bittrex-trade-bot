@@ -27,5 +27,12 @@
   },
   "devDependencies": {
     "@types/node": "8.5.2"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "trailingComma": "none",
+    "tabWidth": 2,
+    "semi": false,
+    "singleQuote": true
   }
 }
