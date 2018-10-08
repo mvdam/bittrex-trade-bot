@@ -1,6 +1,8 @@
+type OrderStatusType = 'BUY' | 'SELL' | 'BOUGHT' | 'SOLD' | null
+
 export interface IOrderStatus {
   isOpen: boolean
-  type: 'BUY' | 'SELL' | null
+  type: OrderStatusType
   orderPrice: number | null
   originalPrice: number | null
   time: number | null

@@ -6,17 +6,11 @@ import { ITraderBotConfig } from '../interfaces/config'
 // functions
 import { getLatestPrice, getOpenOrders } from './markets'
 
-// utils
-import { calculateDiff } from './utils'
-
 export const applyStrategies = (marketStates: IMarketState[], config: ITraderBotConfig) => (
   marketState: IMarketState
 ): IMarketState => {
   if (shouldBuy(marketState, marketStates, config)) {
     const amount = buyAmount(marketState, config)
-    console.log(
-      `BUY ${amount} * ${marketState.market.MarketCurrency} at ${getLatestPrice(marketState)} BTC`
-    )
     return {
       ...marketState,
       orderStatus: {
@@ -32,23 +26,12 @@ export const applyStrategies = (marketStates: IMarketState[], config: ITraderBot
   }
 
   if (shouldSell(marketState, marketStates, config)) {
-    // debug
-    const profit = calculateDiff(getLatestPrice(marketState), marketState.orderStatus.originalPrice)
-    console.log(
-      `SELL ${marketState.orderStatus.amount} * ${
-        marketState.market.MarketCurrency
-      } at ${getLatestPrice(marketState)} BTC. Profit: ${profit}%`
-    )
-
     return {
       ...marketState,
       orderStatus: {
         ...marketState.orderStatus,
-        isOpen: false,
-        type: null,
-        orderPrice: getLatestPrice(marketState),
-        amount: null,
-        time: null
+        type: 'SELL',
+        orderPrice: getLatestPrice(marketState)
       }
     }
   }
@@ -83,4 +66,5 @@ const shouldSell = (
   config: ITraderBotConfig
 ): boolean =>
   marketState.orderStatus.isOpen &&
+  marketState.orderStatus.type === 'BOUGHT' &&
   config.strategies.some(strategy => strategy(marketState).shouldSell() === true)

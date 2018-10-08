@@ -8,9 +8,9 @@ import { ITraderBotConfig } from '../interfaces/config'
 
 // utils
 import { fetchBittrexMarketTicker, fetchMarketHistory, getMarkets } from '../rest/bittrex/markets'
-import { IStrategy } from '../interfaces/strategies'
 import { afterCycle, beforeCycle } from './utils'
 import { applyStrategies } from './strategies'
+import { executeTrades } from './trades'
 
 // constants
 import { MAX_RETRY } from '../constants/constants'
@@ -109,6 +109,9 @@ export const checkMarketStates = (
 
     // apply market strategies
     .map(applyStrategies(marketStates, config))
+
+    // execute orders
+    .mergeMap(executeTrades(marketStates, config))
 
     // combine as array
     .toArray()
