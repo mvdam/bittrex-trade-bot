@@ -99,7 +99,7 @@ export const checkMarketStates = (
   config: ITraderBotConfig
 ): Observable<IMarketState[]> =>
   Observable.of(marketStates)
-    .do(beforeCycle)
+    .do(beforeCycle(config.logger))
 
     // flatten states to process them separately
     .mergeMap(() => toObservable(marketStates))
@@ -117,4 +117,4 @@ export const checkMarketStates = (
     .toArray()
 
     // after cycle
-    .do(afterCycle)
+    .do(afterCycle(config.logger))

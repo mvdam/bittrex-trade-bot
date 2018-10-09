@@ -14,14 +14,14 @@ export const executeTrades = (marketStates: IMarketState[], config: ITraderBotCo
   marketState: IMarketState
 ): Observable<IMarketState> => {
   if (marketState.orderStatus.type === 'BUY') {
-    console.log(
+    config.logger(
       `BUY ${marketState.orderStatus.amount} * ${
         marketState.market.MarketCurrency
       } at ${getLatestPrice(marketState)} BTC`
     )
 
     return Observable.fromPromise(fakePromise(1000))
-      .do(() => console.log(`BUY ORDER of ${marketState.market.MarketCurrency} COMPLETE`))
+      .do(() => config.logger(`BUY ORDER of ${marketState.market.MarketCurrency} COMPLETE`))
       .map(
         (): IMarketState => ({
           ...marketState,
@@ -35,7 +35,7 @@ export const executeTrades = (marketStates: IMarketState[], config: ITraderBotCo
 
   if (marketState.orderStatus.type === 'SELL') {
     const profit = calculateDiff(getLatestPrice(marketState), marketState.orderStatus.originalPrice)
-    console.log(
+    config.logger(
       `SELL ${marketState.orderStatus.amount} * ${
         marketState.market.MarketCurrency
       } at ${getLatestPrice(marketState)} BTC. Profit: ${profit}%`
@@ -43,7 +43,7 @@ export const executeTrades = (marketStates: IMarketState[], config: ITraderBotCo
 
     // todo: implement SELL order here
     return Observable.fromPromise(fakePromise(1000))
-      .do(() => console.log(`SELL ORDER of ${marketState.market.MarketCurrency} COMPLETE`))
+      .do(() => config.logger(`SELL ORDER of ${marketState.market.MarketCurrency} COMPLETE`))
       .map(
         (): IMarketState => ({
           ...marketState,

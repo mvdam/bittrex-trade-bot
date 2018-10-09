@@ -37,7 +37,7 @@ export const tradeBot = (config: ITraderBotConfig): Subscription => {
   validateConfig(config)
 
   return getMarketStates()
-    .do(onInit)
+    .do(onInit(config.logger))
     .subscribe((marketStates: IMarketState[]) => {
       recursiveMarketStateChecker(marketStates, config).subscribe(
         (marketStates: IMarketState[]) => {

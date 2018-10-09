@@ -12,6 +12,7 @@ import { API_KEY, API_SECRET } from './constants/constants'
 // interfaces
 import { ITraderBotConfig } from './interfaces/config'
 import { IBittrexMarketTicker } from './interfaces/bittrex'
+import { telegramLogger } from './loggers/telegram'
 
 // constants
 const AUTO_BUY = false
@@ -51,7 +52,8 @@ fetchBittrexObservable(`https://bittrex.com/api/v1.1/public/getticker?market=USD
       maxSimultaneousTrades: MAX_SIMULTANEOUS_TRADES,
       tradeInterval: ANALYSIS_INTERVAL,
       tradeAmountBTC: TRADE_AMOUNT_BTC,
-      strategies
+      strategies,
+      logger: telegramLogger(process.env.TELEGRAM_API_KEY, process.env.TELEGRAM_CHAT_ID)
     }
 
     tradeBot(config)

@@ -10,4 +10,6 @@ export interface ITraderBotConfig {
   tradeInterval: number
   tradeAmountBTC: number
   strategies: IStrategy[]
+
+  logger: (message: string) => void
 }

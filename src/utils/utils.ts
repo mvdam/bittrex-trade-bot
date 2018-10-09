@@ -21,11 +21,10 @@ export const validateConfig = (config: ITraderBotConfig): void => {
   }
 }
 
-export const onInit = (): void => console.log('Setup of market states complete! Continue...')
+export const onInit = (logger: ITraderBotConfig['logger']) => (): void =>
+  logger('Setup of market states complete! Continue...')
 
-export const beforeCycle = (): void =>
-  console.log(
-    `_____________________________ ${new Date().toString()} _____________________________`
-  )
+export const beforeCycle = (logger: ITraderBotConfig['logger']) => (): void =>
+  logger(`_____________________________ ${new Date().toString()} _____________________________`)
 
-export const afterCycle = (): void => console.log(``)
+export const afterCycle = (logger: ITraderBotConfig['logger']) => (): void => logger(``)
