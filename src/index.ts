@@ -20,7 +20,7 @@ const AUTO_SELL = false
 const MIN_PROFIT_PERCENTAGE = 1
 const TRANSACTION_FEE_PERCENTAGE = 0.5
 const STOP_LOSS_BTC = 0.0001
-const ANALYSIS_INTERVAL = 60 * 1000
+const ANALYSIS_INTERVAL = 20 * 1000
 const MAX_SIMULTANEOUS_TRADES = 2
 
 const strategies = [
@@ -53,7 +53,7 @@ fetchBittrexObservable(`https://bittrex.com/api/v1.1/public/getticker?market=USD
       tradeInterval: ANALYSIS_INTERVAL,
       tradeAmountBTC: TRADE_AMOUNT_BTC,
       strategies,
-      logger: telegramLogger(process.env.TELEGRAM_API_KEY, process.env.TELEGRAM_CHAT_ID)
+      logger: console.log // telegramLogger(process.env.TELEGRAM_API_KEY, process.env.TELEGRAM_CHAT_ID)
     }
 
     tradeBot(config)
